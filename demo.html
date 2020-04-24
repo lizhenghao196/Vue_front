@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Rise From Every Fall</title>
+</head>
+
+<body>
+  <button id="btn1">节流</button>
+  <button id="btn2">防抖</button>
+  <script type="text/javascript">
+    // 函数节流
+    function throttle(fn, time) {
+      // 记录上一次的调用时间
+      let lastTime = 0
+      return function () {
+        // 记录当前函数的调用时间
+        const nowTime = Date.now()
+        if (nowTime - lastTime > time) {
+          // 修改函数的this和参数
+          fn.apply(this, arguments)
+          // 同步时间
+          lastTime = nowTime
+        }
+      }
+    }
+
+
+
+    /**
+     * fn是要处理的函数
+     * time是间隔的时间
+     */
+
+    // 函数防抖
+    function debounce(fn, time) {
+      let timer = null
+      return function () {
+        // 修改this指向和传参
+        let _this = this
+        let args = arguments
+        // 清除上一次的定时器
+        clearTimeout(timer)
+        timer = setTimeout(function () {
+          // 需要修改目标函数fn的this指向 和 参数
+          fn.apply(_this, args);
+        }, time);
+      };
+    }
+
+    // fn被调用的时候，需要this指向那个DOM元素，同时需要event参数，
+    // return的函数的this指向被绑定的DOM元素，同时还有event参数保留在arguments里面
+    // fn.apply后也能得到所有的参数
+    function handleClick() {
+      console.log("我被点了");
+    }
+
+    document.getElementById("btn1").onclick = throttle(handleClick, 1000);
+    document.getElementById("btn2").onclick = debounce(handleClick, 1000);
+  </script>
+</body>
+
+</html>
